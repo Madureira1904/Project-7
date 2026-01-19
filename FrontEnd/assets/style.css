@@ -186,3 +186,36 @@ footer nav ul {
 	margin: 2em
 }
 
+/* Filter-buttons LOOKS from figma */
+
+.filter-buttons {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-bottom: 50px;
+  padding-top: 15px;
+}
+
+.filter-buttons button {
+  background-color: #fff;
+  color: #1D6154;
+  border: 2px solid #1D6154;
+  border-radius: 25px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 10px 20px;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.filter-buttons button:hover {
+  background-color: #1D6154;
+  color: #fff;
+}
+
+.filter-buttons button.active {
+  background-color: #1D6154;
+  color: #fff;
+}
