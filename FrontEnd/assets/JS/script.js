@@ -1,4 +1,4 @@
-console.log("JavaScript front-end ligado com sucesso"); // testing connection
+console.log("JavaScript front-end ligado"); // testing connection
 
 // funtion to grab the works from API
 async function getWorks() {
@@ -9,6 +9,20 @@ async function getWorks() {
     }
     const works = await response.json();
     return works;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+async function getCategories() {
+  try {
+    const response = await fetch("http://localhost:5678/api/categories");
+    if (!response.ok) {
+      throw new Error("Erreur lors de la récupération des travaux");
+    }
+    const categories = await response.json();
+    return categories;
   } catch (error) {
     console.error(error);
     return [];
@@ -40,24 +54,28 @@ function displayWorks(works) {
 }
 
 
-// this is the main function
-async function init() {
-  const works = await getWorks(); // grab the data from API
-  displayWorks(works); // shows in the gallery
-}
-
-// then, executes
-init();
-
 //im selecting all the filtter-buttons
-const filterButtons = document.querySelectorAll(".filter-buttons button");
+const filterButtons = document.querySelector(".filter-buttons");
+
+
+function displayCategories(categories) {
+
+  categories.forEach(category => {
+    const button = document.createElement("button");
+    button.textContent = category.name;
+    button.setAttribute("data-category", category.id);
+    button.className="button";
+
+    filterButtons.appendChild(button);
+  });
+}
 
 
 function filterWorks(category, works) {
   if (category === "all") {
     return works; // get all the works
   } else {
-    return works.filter(work => work.category.name === category); // selecting all the works but getting only the category "name"
+    return works.filter(work => work.category.id == category); // selecting all the works but getting only the category "id"
   }
 }
 
@@ -66,15 +84,20 @@ async function init() {
   const works = await getWorks();
   displayWorks(works);
 
+  const categories = await getCategories(); // grab the data from API
+  displayCategories(categories); // shows in filter-buttons
+
   // Adding the Event Click to the buttons
-  filterButtons.forEach(button => {
+  const buttons=document.querySelectorAll("button");
+  buttons.forEach(button => {
     button.addEventListener("click", () => {
       const category = button.dataset.category;
+      console.log(category)
       const filteredWorks = filterWorks(category, works);  // when clicking one buttun: Gets the category (data-category), Filter the works with filterWorks() and Refreshes the gallery with displayWorks(filteredWorks)
       displayWorks(filteredWorks);
 
     // Remove 'active' from all the buttons and adds 'active" on the clicked button
-    filterButtons.forEach(btn => btn.classList.remove("active"));
+    buttons.forEach(btn => btn.classList.remove("active"));
     button.classList.add("active");
     });
   });
