@@ -93,10 +93,13 @@ nav ul {
 nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
+	text-decoration: none;   
+    transition: color 0.3s; 
 }
 
 li:hover {
-	color: #B1663C;
+	color: #B1663C;     
+    cursor: pointer;
 }
 #introduction {
 	display: flex;
@@ -218,4 +221,117 @@ footer nav ul {
 .filter-buttons button.active {
   background-color: #1D6154;
   color: #fff;
+}
+
+/* NAV BUTTONS */
+
+nav ul li a:hover {
+  color: #B1663C;
+  cursor: pointer;
+}
+
+nav ul li a {
+  text-decoration: none;
+  transition: color 0.3s;
+  color: #000000;
+  font-weight: 400;
+  font-family: 'Work Sans', sans-serif;
+}
+
+nav ul li a:active,
+nav ul li a:focus {      
+  outline: none;
+  cursor: pointer;
+  color: rgb(0, 0, 0);
+}
+
+
+/* LOGIN PAGE */
+
+.login-section {
+  max-width: 400px;
+  margin: 200px auto;
+  padding: 0;               
+  text-align: center;        
+  font-family: 'Work Sans', sans-serif;
+  padding-bottom: 200px;
+}
+
+.login-section h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #1D6154
+}
+
+.login-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;                 
+}
+
+.login-section label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-align: left;
+  display: block;
+  color: #000000;
+}
+
+.login-section input {
+  padding: 18px 20px;       
+  font-size: 18px;         
+  border: none;           
+  border-radius: 2px;
+  outline: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s, transform 0.2s;
+}
+
+
+.login-section button {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  background-color: #1D6154;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-top: 45px;
+  width: 50%;
+  align-self: center;
+}
+
+.login-section input#email {
+  margin-bottom: 30px;
+}
+
+#forgot-password {        
+  color: #000000;         
+  font-size: 14px;       
+  font-weight: 600;       
+  margin-top: 20px;        
+  text-align: center;     
+}
+
+#login-error {
+  display: none;          
+  color: #d51313;        
+  font-size: 18px;        
+  font-weight: 700;       
+  margin-top: 50px;        
+  text-align: center;     
+}
+
+#forgot-link {
+  color: #000; 
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#forgot-link:hover {
+  color: #B1663C;
 }
