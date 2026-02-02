@@ -1,5 +1,47 @@
 console.log("JavaScript front-end ligado"); // testing connection
 
+// checks if the user is logged in, and see if a token exists in localStorage.
+const token = localStorage.getItem("token");
+
+
+// bandeau noir - mode edition
+const editBanner = document.querySelector(".edit-banner");
+
+if (token) {
+  editBanner.style.display = "flex";
+}
+
+
+// button modifier
+const editButton = document.querySelector(".edit-button");
+
+if (token) {
+  editButton.style.display = "flex";
+}
+
+
+
+// selects o link login page
+const loginLink = document.querySelector('nav a[href="login.html"]');
+
+
+// if exists token - transform the loggin in logout
+if (token && loginLink) {
+  loginLink.textContent = "logout";
+  loginLink.href = "#";
+
+  loginLink.addEventListener("click", () => {
+    localStorage.removeItem("token"); // Removes the token of localStorage, does the loggout of the user
+    window.location.reload();
+  });
+}
+
+
+// selects the title of HTML
+const portfolioTitle = document.querySelector("#portfolio h2");
+
+
+
 // funtion to grab the works from API
 async function getWorks() {
   try {
@@ -15,6 +57,8 @@ async function getWorks() {
   }
 }
 
+
+// funtion to grab categories from API
 async function getCategories() {
   try {
     const response = await fetch("http://localhost:5678/api/categories");
@@ -33,7 +77,7 @@ async function getCategories() {
 // grabing the div of the gallery, present on the HTML
 const gallery = document.querySelector(".gallery");
 
-
+// function to show the works
 function displayWorks(works) {
   gallery.innerHTML = ""; // clears the gallery
 
@@ -57,7 +101,12 @@ function displayWorks(works) {
 //im selecting all the filtter-buttons
 const filterButtons = document.querySelector(".filter-buttons");
 
+if (token) {
+  filterButtons.style.display = "none";
+}
 
+
+// function to show categories
 function displayCategories(categories) {
 
   categories.forEach(category => {
@@ -71,6 +120,7 @@ function displayCategories(categories) {
 }
 
 
+// function to filter the works by the category id
 function filterWorks(category, works) {
   if (category === "all") {
     return works; // get all the works
@@ -81,6 +131,7 @@ function filterWorks(category, works) {
 
 
 async function init() {
+
   const works = await getWorks();
   displayWorks(works);
 
