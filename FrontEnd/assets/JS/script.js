@@ -1,46 +1,10 @@
 console.log("JavaScript front-end ligado"); // testing connection
 
-// checks if the user is logged in, and see if a token exists in localStorage.
-const token = localStorage.getItem("token");
-
-
-// bandeau noir - mode edition
-const editBanner = document.querySelector(".edit-banner");
-
-if (token) {
-  editBanner.style.display = "flex";
-}
-
-
-// button modifier
-const editButton = document.querySelector(".edit-button");
-
-if (token) {
-  editButton.style.display = "flex";
-}
-
-
-
-// selects o link login page
-const loginLink = document.querySelector('nav a[href="login.html"]');
-
-
-// if exists token - transform the loggin in logout
-if (token && loginLink) {
-  loginLink.textContent = "logout";
-  loginLink.href = "#";
-
-  loginLink.addEventListener("click", () => {
-    localStorage.removeItem("token"); // Removes the token of localStorage, does the loggout of the user
-    window.location.reload();
-  });
-}
-
+//im selecting all the filtter-buttons
+  const filterButtons = document.querySelector(".filter-buttons");
 
 // selects the title of HTML
 const portfolioTitle = document.querySelector("#portfolio h2");
-
-
 
 // funtion to grab the works from API
 async function getWorks() {
@@ -57,7 +21,6 @@ async function getWorks() {
   }
 }
 
-
 // funtion to grab categories from API
 async function getCategories() {
   try {
@@ -73,7 +36,6 @@ async function getCategories() {
   }
 }
 
-
 // grabing the div of the gallery, present on the HTML
 const gallery = document.querySelector(".gallery");
 
@@ -81,7 +43,7 @@ const gallery = document.querySelector(".gallery");
 function displayWorks(works) {
   gallery.innerHTML = ""; // clears the gallery
 
-  works.forEach(work => {
+  works.forEach((work) => {
     const figure = document.createElement("figure");
 
     const img = document.createElement("img");
@@ -97,40 +59,29 @@ function displayWorks(works) {
   });
 }
 
-
-//im selecting all the filtter-buttons
-const filterButtons = document.querySelector(".filter-buttons");
-
-if (token) {
-  filterButtons.style.display = "none";
-}
-
-
 // function to show categories
 function displayCategories(categories) {
-
-  categories.forEach(category => {
+  categories.forEach((category) => {
     const button = document.createElement("button");
     button.textContent = category.name;
     button.setAttribute("data-category", category.id);
-    button.className="button";
+    button.className = "button";
 
     filterButtons.appendChild(button);
   });
 }
-
 
 // function to filter the works by the category id
 function filterWorks(category, works) {
   if (category === "all") {
     return works; // get all the works
   } else {
-    return works.filter(work => work.category.id == category); // selecting all the works but getting only the category "id"
+    return works.filter((work) => work.category.id == category); // selecting all the works but getting only the category "id"
   }
 }
 
-
 async function init() {
+  const token = localStorage.getItem("token");
 
   const works = await getWorks();
   displayWorks(works);
@@ -139,18 +90,44 @@ async function init() {
   displayCategories(categories); // shows in filter-buttons
 
   // Adding the Event Click to the buttons
-  const buttons=document.querySelectorAll("button");
-  buttons.forEach(button => {
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach((button) => {
     button.addEventListener("click", () => {
       const category = button.dataset.category;
-      console.log(category)
-      const filteredWorks = filterWorks(category, works);  // when clicking one buttun: Gets the category (data-category), Filter the works with filterWorks() and Refreshes the gallery with displayWorks(filteredWorks)
+      console.log(category);
+      const filteredWorks = filterWorks(category, works); // when clicking one buttun: Gets the category (data-category), Filter the works with filterWorks() and Refreshes the gallery with displayWorks(filteredWorks)
       displayWorks(filteredWorks);
 
-    // Remove 'active' from all the buttons and adds 'active" on the clicked button
-    buttons.forEach(btn => btn.classList.remove("active"));
-    button.classList.add("active");
+      // Remove 'active' from all the buttons and adds 'active" on the clicked button
+      buttons.forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
     });
+
+
+    // bandeau noir - mode edition
+    const editBanner = document.querySelector(".edit-banner");
+    const editButton = document.querySelector(".edit-button");
+    // selects o link login page
+    const loginLink = document.querySelector('nav a[href="login.html"]');
+
+    if (token) {
+      editBanner.style.display = "flex";
+      editButton.style.display = "flex";
+      filterButtons.style.display = "none";
+
+      // if exists token - transform the loggin in logout
+      loginLink.textContent = "logout";
+      loginLink.href = "#";
+
+      loginLink.addEventListener("click", () => {
+        localStorage.removeItem("token"); // Removes the token of localStorage, does the loggout of the user
+        editBanner.style.display = "none";
+        editButton.style.display = "none";
+        filterButtons.style.display = "flex";
+        loginLink.textContent = "logout";
+        loginLink.href = "index.html";
+      });
+    }
   });
 }
 
