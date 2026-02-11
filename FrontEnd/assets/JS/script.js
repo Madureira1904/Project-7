@@ -6,6 +6,7 @@ console.log("JavaScript front-end ligado"); // testing connection
 // selects the title of HTML
 const portfolioTitle = document.querySelector("#portfolio h2");
 
+
 // funtion to grab the works from API
 async function getWorks() {
   try {
@@ -20,6 +21,7 @@ async function getWorks() {
     return [];
   }
 }
+
 
 // funtion to grab categories from API
 async function getCategories() {
@@ -36,8 +38,10 @@ async function getCategories() {
   }
 }
 
+
 // grabing the div of the gallery, present on the HTML
 const gallery = document.querySelector(".gallery");
+
 
 // function to show the works
 function displayWorks(works) {
@@ -59,6 +63,7 @@ function displayWorks(works) {
   });
 }
 
+
 // function to show categories
 function displayCategories(categories) {
   categories.forEach((category) => {
@@ -71,6 +76,7 @@ function displayCategories(categories) {
   });
 }
 
+
 // function to filter the works by the category id
 function filterWorks(category, works) {
   if (category === "all") {
@@ -80,7 +86,12 @@ function filterWorks(category, works) {
   }
 }
 
+
+
+// --- MAIN FUNCTION --- //
+
 async function init() {
+
   const token = localStorage.getItem("token");
 
   const works = await getWorks();
@@ -109,16 +120,57 @@ async function init() {
     const editButton = document.querySelector(".edit-button");
     // selects o link login page
     const loginLink = document.querySelector('nav a[href="login.html"]');
+    const filterButtons = document.querySelector(".filter-buttons");
+
+    // modal //
+    const modal = document.getElementById("modal");
+    const openModalBtn = document.querySelector(".edit-button"); 
+    const closeModal = document.querySelector(".close-modal");
+    const modalGallery = document.querySelector(".modal-gallery");
+
+    function displayWorksInModal(worksToShow) {
+    modalGallery.innerHTML = ""; 
+    worksToShow.forEach(work => {
+      const figure = document.createElement("figure");
+      const img = document.createElement("img");
+      img.src = work.imageUrl;
+      img.alt = work.title;
+      figure.appendChild(img);
+      modalGallery.appendChild(figure);
+    });
+  }
+
+  if (closeModal) {
+    closeModal.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+  }
+
+  window.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  });
 
     if (token) {
       editBanner.style.display = "flex";
       editButton.style.display = "flex";
       filterButtons.style.display = "none";
+      openModalBtn.style.display = "flex";
+      
+      openModalBtn.addEventListener("click", async () => {
+      modal.style.display = "flex";
+      const updatedWorks = await getWorks(); // Garante que a lista está fresca
+      displayWorksInModal(updatedWorks);
+    });
+
 
       // if exists token - transform the loggin in logout
       loginLink.textContent = "logout";
       loginLink.href = "#";
 
+
+      // logout //
       loginLink.addEventListener("click", () => {
         localStorage.removeItem("token"); // Removes the token of localStorage, does the loggout of the user
         editBanner.style.display = "none";
@@ -128,6 +180,7 @@ async function init() {
         loginLink.href = "index.html";
       });
     }
+    
   });
 }
 
