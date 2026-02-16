@@ -50,9 +50,9 @@
 		<div class="portfolio-header">
 		    <h2>Mes Projets</h2>
 
-		    <button class="edit-button">
+		    <div class="edit-button">
                 <i class="fa-regular fa-pen-to-square"></i>modifier
-            </button>
+			</div>
 		</div>
 
 		<div class="filter-buttons">
@@ -88,19 +88,59 @@
 </footer>
 
 <div class="modal" id="modal">
-    <div class="modal-content">
-      <span class="close-modal">&times;</span>
-      
+  <div class="modal-content">
+
+    <!-- croix -->
+    <span class="close-modal">&times;</span>
+
+    <!-- page 1 : gallery -->
+    <div class="modal-gallery-view" id="gallery-view">
       <h3>Galerie photo</h3>
-      
-      <div class="modal-gallery">
-      </div>
-      
+
+      <div class="modal-gallery"></div>
+
       <button class="add-photo-button">
         Ajouter une photo
       </button>
     </div>
+
+    <!--  page 1 : Form -->
+    <div class="modal-form-view" id="form-view" style="display: none;">
+
+      <!-- flèche retour -->
+      <span class="back-to-gallery"><i class="fa-solid fa-arrow-left-long"></i></span>
+
+      <h3>Ajout photo</h3>
+
+      <form id="add-project-form">
+
+        <div class="image-upload">
+          <input type="file" id="image" accept="image/*" required>
+          <div id="image-preview"></div>
+        </div>
+
+        <label for="title">Titre</label>
+        <input type="text" id="title" required>
+
+        <label for="category">Catégorie</label>
+        <select id="category" required>
+          <option value="">-- Sélectionner --</option>
+        </select>
+
+        <div class="modal-separator"></div>
+
+        <button type="submit" class="submit-button">
+          Valider
+        </button>
+
+      </form>
+
+    </div>
+
   </div>
+</div>
+
+  
 
 <script src="./assets/js/script.js"></script>
 </body>

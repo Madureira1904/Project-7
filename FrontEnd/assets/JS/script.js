@@ -1,11 +1,10 @@
 console.log("JavaScript front-end ligado"); // testing connection
 
 //im selecting all the filtter-buttons
-  const filterButtons = document.querySelector(".filter-buttons");
+const filterButtons = document.querySelector(".filter-buttons");
 
 // selects the title of HTML
 const portfolioTitle = document.querySelector("#portfolio h2");
-
 
 // funtion to grab the works from API
 async function getWorks() {
@@ -22,7 +21,6 @@ async function getWorks() {
   }
 }
 
-
 // funtion to grab categories from API
 async function getCategories() {
   try {
@@ -38,10 +36,33 @@ async function getCategories() {
   }
 }
 
+// function to delete works from API
+async function deleteWork(id) {
+  const token = localStorage.getItem("token");
+
+  try {
+    const response = await fetch(`http://localhost:5678/api/works/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Erreur lors de la suppression");
+    }
+
+    // refresh all after delete one/more works
+    const updatedWorks = await getWorks();
+    displayWorks(updatedWorks);
+    displayWorksInModal(updatedWorks);
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 // grabing the div of the gallery, present on the HTML
 const gallery = document.querySelector(".gallery");
-
 
 // function to show the works
 function displayWorks(works) {
@@ -63,7 +84,6 @@ function displayWorks(works) {
   });
 }
 
-
 // function to show categories
 function displayCategories(categories) {
   categories.forEach((category) => {
@@ -76,7 +96,6 @@ function displayCategories(categories) {
   });
 }
 
-
 // function to filter the works by the category id
 function filterWorks(category, works) {
   if (category === "all") {
@@ -86,102 +105,174 @@ function filterWorks(category, works) {
   }
 }
 
-
-
 // --- MAIN FUNCTION --- //
 
 async function init() {
 
   const token = localStorage.getItem("token");
 
+  // fetch data - get works
   const works = await getWorks();
   displayWorks(works);
 
-  const categories = await getCategories(); // grab the data from API
+  const categories = await getCategories();
   displayCategories(categories); // shows in filter-buttons
 
-  // Adding the Event Click to the buttons
-  const buttons = document.querySelectorAll("button");
+  
+  // filter buttons - adding the Event Click to the buttons
+  const buttons = document.querySelectorAll(".filter-buttons button");
+
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
+
       const category = button.dataset.category;
-      console.log(category);
-      const filteredWorks = filterWorks(category, works); // when clicking one buttun: Gets the category (data-category), Filter the works with filterWorks() and Refreshes the gallery with displayWorks(filteredWorks)
+      const filteredWorks = filterWorks(category, works); //when clicking one button: Gets the category (data-category), Filter the works with filterWorks() and shows in the gallery with displayWorks(filteredWorks)
       displayWorks(filteredWorks);
 
-      // Remove 'active' from all the buttons and adds 'active" on the clicked button
       buttons.forEach((btn) => btn.classList.remove("active"));
       button.classList.add("active");
     });
+  });
+
+  
+  // edit mode elements - bandeau noir and filter buttons
+  const editBanner = document.querySelector(".edit-banner");
+  const editButton = document.querySelector(".edit-button");
+  const loginLink = document.querySelector('nav a[href="login.html"]');
+  const filterButtons = document.querySelector(".filter-buttons");
 
 
-    // bandeau noir - mode edition
-    const editBanner = document.querySelector(".edit-banner");
-    const editButton = document.querySelector(".edit-button");
-    // selects o link login page
-    const loginLink = document.querySelector('nav a[href="login.html"]');
-    const filterButtons = document.querySelector(".filter-buttons");
+  // modale elements
+  const modal = document.getElementById("modal");
+  const openModalBtn = document.querySelector(".edit-button");
+  const closeModal = document.querySelector(".close-modal");
+  const modalGallery = document.querySelector(".modal-gallery");
 
-    // modal //
-    const modal = document.getElementById("modal");
-    const openModalBtn = document.querySelector(".edit-button"); 
-    const closeModal = document.querySelector(".close-modal");
-    const modalGallery = document.querySelector(".modal-gallery");
 
-    function displayWorksInModal(worksToShow) {
-    modalGallery.innerHTML = ""; 
-    worksToShow.forEach(work => {
+  // page system - second modale -
+  const galleryView = document.getElementById("gallery-view");
+  const formView = document.getElementById("form-view");
+
+  const addPhotoButton = document.querySelector(".add-photo-button");
+  const backToGallery = document.querySelector(".back-to-gallery");
+
+  const addProjectForm = document.getElementById("add-project-form");
+  const categorySelect = document.getElementById("category");
+
+
+
+  // display works inside of modale
+  function displayWorksInModal(worksToShow) {
+
+    modalGallery.innerHTML = "";
+
+    worksToShow.forEach((work) => {
+
       const figure = document.createElement("figure");
+      figure.classList.add("modal-work");
+
       const img = document.createElement("img");
       img.src = work.imageUrl;
       img.alt = work.title;
+
+      const deleteIcon = document.createElement("i");
+      deleteIcon.classList.add("fa-solid", "fa-trash", "deleteIcon");
+
+      deleteIcon.addEventListener("click", async () => {
+        await deleteWork(work.id); // calls the function to do delete on the a função que faz DELETE na API
+
+        // Refresh works
+        const updatedWorks = await getWorks();
+        displayWorks(updatedWorks);
+        displayWorksInModal(updatedWorks);
+      });
+
       figure.appendChild(img);
+      figure.appendChild(deleteIcon);
       modalGallery.appendChild(figure);
     });
   }
 
-  if (closeModal) {
-    closeModal.addEventListener("click", () => {
-      modal.style.display = "none";
+  
+  // fill category select -form-
+  categories.forEach((category) => {
+    const option = document.createElement("option");
+    option.value = category.id;
+    option.textContent = category.name;
+    categorySelect.appendChild(option);
+  });
+
+
+
+  // open modal
+  if (openModalBtn) {
+    openModalBtn.addEventListener("click", () => {
+      modal.style.display = "flex";
+      displayWorksInModal(works);
+
+      // Always reset to gallery page when opening
+      formView.style.display = "none";
+      galleryView.style.display = "block";
     });
+  }
+
+
+  // switch to form page - second page modale
+  addPhotoButton.addEventListener("click", () => {
+    galleryView.style.display = "none";
+    formView.style.display = "block";
+  });
+
+  
+  // event click back to gallery page - first page modale
+  backToGallery.addEventListener("click", () => {
+    formView.style.display = "none";
+    galleryView.style.display = "block";
+  });
+
+  
+  // close modal //
+  function closeModalAndReset() {
+    modal.style.display = "none";
+    formView.style.display = "none";
+    galleryView.style.display = "block";
+  }
+
+  if (closeModal) {
+    closeModal.addEventListener("click", closeModalAndReset);
   }
 
   window.addEventListener("click", (event) => {
     if (event.target === modal) {
-      modal.style.display = "none";
+      closeModalAndReset();
     }
   });
 
-    if (token) {
-      editBanner.style.display = "flex";
-      editButton.style.display = "flex";
-      filterButtons.style.display = "none";
-      openModalBtn.style.display = "flex";
-      
-      openModalBtn.addEventListener("click", async () => {
-      modal.style.display = "flex";
-      const updatedWorks = await getWorks(); // Garante que a lista está fresca
-      displayWorksInModal(updatedWorks);
+  
+  // edit mode (token)
+  if (token) {
+
+    editBanner.style.display = "flex";
+    editButton.style.display = "flex";
+    filterButtons.style.display = "none";
+
+    // if exists token - transform the loggin in logout
+    loginLink.textContent = "logout";
+    loginLink.href = "#";
+
+    // logout //
+    loginLink.addEventListener("click", () => {
+      localStorage.removeItem("token"); // Removes the token of localStorage, does the loggout of the user
+      window.location.reload();
     });
 
+  } else {
 
-      // if exists token - transform the loggin in logout
-      loginLink.textContent = "logout";
-      loginLink.href = "#";
+    editBanner.style.display = "none";
+    editButton.style.display = "none";
+    filterButtons.style.display = "flex";
+  }
 
-
-      // logout //
-      loginLink.addEventListener("click", () => {
-        localStorage.removeItem("token"); // Removes the token of localStorage, does the loggout of the user
-        editBanner.style.display = "none";
-        editButton.style.display = "none";
-        filterButtons.style.display = "flex";
-        loginLink.textContent = "logout";
-        loginLink.href = "index.html";
-      });
-    }
-    
-  });
 }
 
 init();

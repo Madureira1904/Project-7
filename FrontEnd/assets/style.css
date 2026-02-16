@@ -469,3 +469,118 @@ nav ul li a:focus {
   width: 45%;
   font-family: 'Work Sans', sans-serif;
 }
+
+/* delete icon of the modale */
+
+.modal-gallery figure {
+  position: relative;
+}
+
+.modal-gallery .deleteIcon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: black;
+  color: white !important;
+  padding: 5px;
+  font-size: 10px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: transform 0.2s;
+}
+
+.modal-gallery .deleteIcon:hover {
+  transform: scale(1.2);
+}
+
+/* second modale, ajouter works */
+
+.modal-form-view {
+  padding: 10px 20px 10px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.back-to-gallery {
+  position: absolute;
+  left: 30px;
+  top: 25px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.modal-form-view h3 {
+  margin-bottom: 30px;
+  font-size: 25px;
+  font-weight: 500;
+  text-align: center;
+}
+
+#add-project-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-upload {
+  background-color: #cbe3ef;
+  border-radius: 3px;
+  padding: 25px;
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+  height: 100px;
+}
+
+.image-upload input[type="file"] {
+  margin-top: 40px;
+  align-items: center;
+}
+
+#image-preview img {
+  max-height: 100%;
+  max-width: 20%;
+  object-fit: contain;
+}
+
+#add-project-form label {
+  font-size: 14px;
+  margin-bottom: 20px;
+  margin-top: 15px;
+  gap: 100px
+}
+
+.modal-separator {
+  width: 100%;
+  border-bottom: 3px solid #ccc;
+  margin-bottom: 15px;
+  padding-bottom: 70px;
+  row-gap: 30px;
+}
+
+#add-project-form input[type="text"],
+#add-project-form select {
+  height: 40px;
+  border: none;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+  padding: 0 10px;
+  font-size: 14px;
+  gap: 100px
+}
+
+.submit-button {
+  background-color: #1D6154;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 25px;
+  align-self: center;
+  transition: background-color 0.3s;
+  width: 45%;
+  font-family: 'Work Sans', sans-serif;
+  margin: 50px;
+  }
