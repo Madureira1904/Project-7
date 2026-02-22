@@ -99,9 +99,11 @@
 
       <div class="modal-gallery"></div>
 
+    <div class="add-photo-wrapper">
       <button class="add-photo-button">
         Ajouter une photo
       </button>
+	</div>  
     </div>
 
     <!--  page 1 : Form -->
@@ -114,10 +116,21 @@
 
       <form id="add-project-form">
 
-        <div class="image-upload">
-          <input type="file" id="image" accept="image/*" required>
-          <div id="image-preview"></div>
+         <div class="image-upload">
+  
+            <i class="fa-regular fa-image upload-icon"></i>
+
+  
+            <label for="image" class="upload-button">
+            + Ajouter photo
+            </label>
+            <input type="file" id="image" accept="image/*" required>
+
+            <div id="image-preview"></div>
         </div>
+
+
+
 
         <label for="title">Titre</label>
         <input type="text" id="title" required>

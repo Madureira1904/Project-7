@@ -164,26 +164,38 @@ async function init() {
 // image preview
   const imageInput = document.getElementById("image");
   const imagePreview = document.getElementById("image-preview");
+  const uploadIcon = document.querySelector(".upload-icon");
+  const uploadButton = document.querySelector(".upload-button");
 
+
+  // --- Reset form e preview da segunda página da modal ---
+function resetFormView() {
+  addProjectForm.reset();               // limpa todos os campos do form
+  imagePreview.innerHTML = "";          // remove a imagem do preview
+  uploadIcon.style.display = "block";   // mostra o ícone novamente
+  uploadButton.style.display = "block"; // mostra o botão "+ Ajouter photo" novamente
+  formView.style.display = "none";      // opcional: esconde o form
+  galleryView.style.display = "block";  // mostra a galeria
+}
 
   // preview of the photo in the form
   imageInput.addEventListener("change", () => {
 
-  const file = imageInput.files[0];
+    const file = imageInput.files[0];
+    if (!file) return;
 
-  if (!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = function(e) {
-
-    imagePreview.innerHTML = "";
+    const reader = new FileReader();
+    reader.onload = function(e) {
+    imageInput.style.display = "";
 
     const img = document.createElement("img");
     img.src = e.target.result;
     img.alt = "Preview";
 
     imagePreview.appendChild(img);
+
+    uploadIcon.style.display = "none";
+    uploadButton.style.display = "none";
   };
 
   reader.readAsDataURL(file);
@@ -275,6 +287,9 @@ async function init() {
 
   // reset form
   addProjectForm.reset();
+
+  // reset completo do form e preview
+  resetFormView();
 
   // go back to gallery page
   formView.style.display = "none";
