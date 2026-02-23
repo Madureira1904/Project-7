@@ -107,14 +107,14 @@ function filterWorks(category, works) {
 
 
 
-// --- MAIN FUNCTION --- //
+//  ...MAIN FUNCTION...  //
 
 async function init() {
 
   const token = localStorage.getItem("token");
 
   // fetch data - get works
-  const works = await getWorks();
+  var works = await getWorks();
   displayWorks(works);
 
   const categories = await getCategories();
@@ -167,15 +167,37 @@ async function init() {
   const uploadIcon = document.querySelector(".upload-icon");
   const uploadButton = document.querySelector(".upload-button");
 
+// button VALIDER - second page modale
+  const submitButton = addProjectForm.querySelector('button[type="submit"]');
+  submitButton.disabled = true; // starts always disable
 
-  // --- Reset form e preview da segunda página da modal ---
+   // function that valides the formulaire
+  function checkFormValidity() {
+
+    const image = imageInput.files[0];
+    const title = document.getElementById("title").value.trim();
+    const category = categorySelect.value;
+
+    if (image && title && category) {
+      submitButton.disabled = false;
+    } else {
+      submitButton.disabled = true;
+    }
+  }
+
+  // listeners to activer/desactiver the button
+  imageInput.addEventListener("change", checkFormValidity);
+  document.getElementById("title").addEventListener("input", checkFormValidity);
+  categorySelect.addEventListener("change", checkFormValidity);
+
+  //  Reset form e preview of the second page of the modale
 function resetFormView() {
-  addProjectForm.reset();               // limpa todos os campos do form
-  imagePreview.innerHTML = "";          // remove a imagem do preview
-  uploadIcon.style.display = "block";   // mostra o ícone novamente
-  uploadButton.style.display = "block"; // mostra o botão "+ Ajouter photo" novamente
-  formView.style.display = "none";      // opcional: esconde o form
-  galleryView.style.display = "block";  // mostra a galeria
+  addProjectForm.reset();               // clears all the camps of the form
+  imagePreview.innerHTML = "";          // removes the image of the preview
+  uploadIcon.style.display = "block";   // shows the icon again
+  uploadButton.style.display = "block"; // shows the button "+ Ajouter photo" again
+  formView.style.display = "none";      // hide the form
+  galleryView.style.display = "block";  // shows the gallery
 }
 
   // preview of the photo in the form
@@ -221,7 +243,7 @@ function resetFormView() {
       deleteIcon.classList.add("fa-solid", "fa-trash", "deleteIcon");
 
       deleteIcon.addEventListener("click", async () => {
-        await deleteWork(work.id); // calls the function to do delete on the a função que faz DELETE na API
+        await deleteWork(work.id); // calls the function to do delete in the API
 
         // refresh works
         const updatedWorks = await getWorks();
@@ -264,7 +286,7 @@ function resetFormView() {
     return;
   }
 
-  // cria um objeto FormData para enviar os dados como multipart/form-data
+  // creates a FormData object to send the data as multipart/form-data.
   const formData = new FormData();
   formData.append("image", image);
   formData.append("title", title);
@@ -280,10 +302,10 @@ function resetFormView() {
   });
 
   // refresh gallery dynamically
-  const updatedWorks = await getWorks();
+  works = await getWorks();
 
-  displayWorks(updatedWorks); // refresh the gallery in the main page atualiza
-  displayWorksInModal(updatedWorks); // refresh the gallery in the modale
+  displayWorks(works); // refresh the gallery in the main page atualiza
+  displayWorksInModal(works); // refresh the gallery in the modale
 
   // reset form
   addProjectForm.reset();

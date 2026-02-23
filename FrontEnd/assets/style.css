@@ -384,7 +384,7 @@ nav ul li a:focus {
   gap: 20px;
 }
 
-/* FENETRE MODALE */
+/* Modale */
 
 .modal {
   position: fixed;
@@ -550,6 +550,7 @@ nav ul li a:focus {
 }
 
 /* Input file - display none */
+
 .image-upload input[type="file"] {
   display: none;
 }
@@ -639,4 +640,16 @@ nav ul li a:focus {
   flex-direction: column;
   align-items: center;
   
+}
+
+/* button VALIDER desable/enable */
+
+button:disabled {
+  background-color: #A7A7A7;
+  cursor: not-allowed;
+}
+
+button.enabled {
+  background-color: #1D6154;
+  cursor: pointer;
 }
